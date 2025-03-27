@@ -11,6 +11,7 @@ target/
 *.iws
 *.iml
 *.ipr
+.idea/
 
 ### Eclipse ###
 .apt_generated
@@ -42,4 +43,6 @@ build/
 
 ### data .json ###
 **/src/main/**/data/*.json
+
+
 

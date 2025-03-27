@@ -13,6 +13,7 @@ public class Main {
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
 
         jda.addEventListener(new GifCounterListener());
+        jda.addEventListener(new GifTopViewerListener());
 
 
     }
