@@ -1,0 +1,1 @@
+TO DO: -Info about saved servers and gifs
