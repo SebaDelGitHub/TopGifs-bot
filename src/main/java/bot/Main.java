@@ -15,6 +15,5 @@ public class Main {
         jda.addEventListener(new GifCounterListener());
         jda.addEventListener(new GifTopViewerListener());
 
-
     }
 }

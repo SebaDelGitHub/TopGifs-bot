@@ -3,6 +3,7 @@ package bot;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import io.github.cdimascio.dotenv.Dotenv;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -14,7 +15,8 @@ public class GifDataManager {
     private final Gson gson;
 
     public GifDataManager(String fileName, String serverName, String serverId) {
-        String saveUrl = "src/main/java/data/";
+        Dotenv dotenv = Dotenv.load();
+        String saveUrl = dotenv.get("JSON_FILE_PATH");
 
         this.jsonFile = new File(saveUrl + fileName);
         this.gson = new GsonBuilder().setPrettyPrinting().create();

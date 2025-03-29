@@ -1,5 +1,6 @@
 package bot;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -14,12 +15,15 @@ public class GifTopViewerListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+        Dotenv dotenv = Dotenv.load();
+        String saveUrl = dotenv.get("JSON_FILE_PATH");
+
         String message = event.getMessage().getContentRaw();
         if (message.equalsIgnoreCase("$topgifs")) {
             try {
                 String serverId = event.getGuild().getId();
                 String fileName = serverId + "_gif_data.json";
-                File file = new File("src/main/java/data/" + fileName);
+                File file = new File(saveUrl + fileName);
 
                 if (!file.exists()) {
                     event.getChannel().sendMessage("There is no GIF data for this server..").queue();
@@ -40,7 +44,7 @@ public class GifTopViewerListener extends ListenerAdapter {
 
                 int rank = 1;
                 for (Map.Entry<String, Integer> entry : sortedGifs) {
-                    embed.addField("#" + rank,  entry.getKey() + "  **-" + entry.getValue() + " uses**", false);
+                    embed.addField("#" + rank,  entry.getKey() + "  **- " + entry.getValue() + " uses**", false);
                     rank++;
                 }
 
