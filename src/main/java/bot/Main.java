@@ -15,5 +15,6 @@ public class Main {
         jda.addEventListener(new GifCounterListener());
         jda.addEventListener(new GifTopViewerListener());
 
+        jda.upsertCommand("topgifs", "Shows the top 10 most used GIFs").queue();
     }
 }

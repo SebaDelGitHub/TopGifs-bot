@@ -2,7 +2,7 @@ package bot;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
@@ -14,46 +14,45 @@ import java.util.*;
 public class GifTopViewerListener extends ListenerAdapter {
 
     @Override
-    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         Dotenv dotenv = Dotenv.load();
         String saveUrl = dotenv.get("JSON_FILE_PATH");
 
-        String message = event.getMessage().getContentRaw();
-        if (message.equalsIgnoreCase(dotenv.get("TOPGIFS_COMMAND"))) {
-            try {
-                String serverId = event.getGuild().getId();
-                String fileName = serverId + "_gif_data.json";
-                File file = new File(saveUrl + fileName);
+        if (!event.getName().equals(dotenv.get("TOPGIFS_COMMAND"))) return;
 
-                if (!file.exists()) {
-                    event.getChannel().sendMessage("There is no GIF data for this server..").queue();
-                    return;
-                }
+        try {
+            String serverId = event.getGuild().getId();
+            String fileName = serverId + "_gif_data.json";
+            File file = new File(saveUrl + fileName);
 
-                Map<String, Integer> gifMap = getGifUsageMap(file);
-
-                List<Map.Entry<String, Integer>> sortedGifs = gifMap.entrySet()
-                        .stream()
-                        .sorted((a, b) -> b.getValue().compareTo(a.getValue()))
-                        .limit(10)
-                        .toList();
-
-                EmbedBuilder embed = new EmbedBuilder();
-                embed.setTitle("🎉 Top 10 most used GIFs 🎉");
-                embed.setColor(0x00A2E8);
-
-                int rank = 1;
-                for (Map.Entry<String, Integer> entry : sortedGifs) {
-                    embed.addField("#" + rank,  entry.getKey() + "  **- " + entry.getValue() + " uses**", false);
-                    rank++;
-                }
-
-                event.getChannel().sendMessageEmbeds(embed.build()).queue();
-
-            } catch (Exception e) {
-                event.getChannel().sendMessage("There was an error getting the top GIFs.").queue();
-                e.printStackTrace();
+            if (!file.exists()) {
+                event.reply("There is no GIF data for this server..").queue();
+                return;
             }
+
+            Map<String, Integer> gifMap = getGifUsageMap(file);
+
+            List<Map.Entry<String, Integer>> sortedGifs = gifMap.entrySet()
+                    .stream()
+                    .sorted((a, b) -> b.getValue().compareTo(a.getValue()))
+                    .limit(10)
+                    .toList();
+
+            EmbedBuilder embed = new EmbedBuilder();
+            embed.setTitle("🎉 Top 10 most used GIFs 🎉");
+            embed.setColor(0x00A2E8);
+
+            int rank = 1;
+            for (Map.Entry<String, Integer> entry : sortedGifs) {
+                embed.addField("#" + rank, entry.getKey() + "  **- " + entry.getValue() + " uses**", false);
+                rank++;
+            }
+
+            event.replyEmbeds(embed.build()).queue();
+
+        } catch (Exception e) {
+            event.reply("There was an error getting the top GIFs.").queue();
+            e.printStackTrace();
         }
     }
 
