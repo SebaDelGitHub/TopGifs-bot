@@ -20,6 +20,9 @@ This is a simple Discord bot that tracks GIFs from **Tenor** and **Giphy**. It s
 
    # Path to the JSON file where GIF data will be saved
    JSON_FILE_PATH=src/main/java/data/
+   
+   # Command to view the top 10 most used gifs
+   TOPGIFS_COMMAND=$topgifs
    ```
 
 3. Install dependencies and run the bot.

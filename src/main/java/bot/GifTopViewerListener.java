@@ -19,7 +19,7 @@ public class GifTopViewerListener extends ListenerAdapter {
         String saveUrl = dotenv.get("JSON_FILE_PATH");
 
         String message = event.getMessage().getContentRaw();
-        if (message.equalsIgnoreCase("$topgifs")) {
+        if (message.equalsIgnoreCase(dotenv.get("TOPGIFS_COMMAND"))) {
             try {
                 String serverId = event.getGuild().getId();
                 String fileName = serverId + "_gif_data.json";
